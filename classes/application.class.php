@@ -5,10 +5,10 @@ class Application {
         private $idManager;
         private $uuid;
         private $userName;
-        private $phone = 79963814070; //Не забыть убрать, dev-значение
+        private $phone = '79963814070'; //Не забыть убрать, dev-значение
 
         public function __construct() {
-                require_once $_SERVER['DOCUMENT_ROOT'] . '/core/_dataRowUpdater.class.php';
+
         }
 
 	public function sendCode($phone) {
@@ -52,26 +52,25 @@ class Application {
                 $this->uuid = $this->idManager->v4();
                 return $this->uuid;
         }
-        function getUserName($phone = 0) {
-                //$this->phone = $phone;
+        function getUserName() {
                 require_once $_SERVER['DOCUMENT_ROOT'] . '/core/_dataRowSource.class.php';
                 $dataRow = new DataRowSource('select name from data_users where phone="' . $this->phone . '"');
-                if (!$data = $dataRow->getData()) {
+                if (!$dataRow->getData()) {
                         $this->error = $dataRow->error;
-                        return $this->error;
+                        return false;
                 }
-                $this->userName = $data['name'];
+                $this->userName = $dataRow->getValue('name');
                 return $this->userName;
         }
-        function getUserId($phone = 0) {
-                //$this->phone = $phone;
+        function getUserId() {
                 require_once $_SERVER['DOCUMENT_ROOT'] . '/core/_dataRowSource.class.php';
-                $dataRow = new DataRowSource('select id from data_users where phone="' . $this->phone . '"');
-                if (!$data = $dataRow->getData()) {
+                $dataRow = new DataRowSource('select id from data_users where phone=' . $this->phone);
+
+                if (!$dataRow->getData()) {
                         $this->error = $dataRow->error;
-                        return $this->error;
+                        return false;
                 }
-                $this->userId = $data['id'];
+                $this->userId = $dataRow->getValue('id');
                 return $this->userId;
         }
 
